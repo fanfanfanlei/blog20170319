@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+	<meta name="misapplication-tap-highlight" content="no"/>
+	<meta name="HandheldFriendly" content="true"/>
+	<meta name="MobileOptimized" content="320"/>
+    <title>票无忧</title>
+    <link rel="stylesheet" type="text/css" href="css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>    
+    <script src="js/update.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/pwy_app_util.js" type="text/javascript" charset="utf-8"></script>
+    <script src="seajs/2.1.1/sea.js" type="text/javascript" id="seajsnode" charset="utf-8"></script>
+    <script type="text/javascript">
+    	plus.webview.currentWebview().setStyle({
+                        'popGesture': 'none'
+                    });
+		document.addEventListener('plusready', function(){
+			var pwyUtil = pwyAppUtil(plus);			
+			seajs.use('jquery',function($){
+				var authDataInfo = pwyUtil.getStorageItem('authDataInfo'); 
+				var admin=pwyUtil.getStorageItem('admin'); 
+				
+				var homePageObj = $('#homePage');
+				homePageObj.on('tap', '.wait', function(){
+					pwyUtil.toast('暂未开通，敬请期待');
+				});				
+				//点击切换到生成开票二维码页面
+				homePageObj.on('touchend', '.toReceiveInvoice', function(){
+					if(timeInterval()<0){
+						if(authDataInfo==null){
+							plus.nativeUI.toast("请先获取开票授权",{
+								"verticalAlign":"center"
+							})
+							return false
+						}else{
+							if(authDataInfo.phone!=admin.mobile){
+								plus.nativeUI.toast("授权信息不匹配,需重新获取授权",{
+								"verticalAlign":"center"
+								})
+								return false
+							}else{
+								clicked('plus/scanCode_invoice.html',false,false);
+							}
+							
+						}
+						
+					}else{
+						plus.nativeUI.toast('登录失效，请重新登陆', {
+									'verticalAlign':'center'
+						});
+						pwyUtil.setStorageItem('personalTokenInfo',false);
+						clicked("login.html");
+					}
+					
+				});
+				//录入开票
+				homePageObj.on('touchend', '.toBxApprove', function(){
+					if(timeInterval()<0){
+						if(authDataInfo==null){
+							plus.nativeUI.toast("请先获取开票授权",{
+								"verticalAlign":"center"
+							})
+							return false
+						}else{
+							if(authDataInfo.phone!=admin.mobile){
+								plus.nativeUI.toast("授权信息不匹配,需重新获取授权",{
+								"verticalAlign":"center"
+								})
+								return false
+							}else{
+								clicked('plus/enter_invoice.html',false,false);
+							}	
+						}
+							
+					}else{
+						plus.nativeUI.toast('登录失效，请重新登陆', {
+									'verticalAlign':'center'
+						});
+						pwyUtil.setStorageItem('personalTokenInfo',false);
+						clicked("login.html");
+					}
+											
+				});
+				
+				//扫描获取开票授权
+				homePageObj.on('touchend', '.toAddInvoice', function(){
+					if(timeInterval()<0){
+						clicked('plus/barcode_scan.html',false,false);
+					}else{
+						plus.nativeUI.toast('登录失效，请重新登陆', {
+									'verticalAlign':'center'
+						});
+						pwyUtil.setStorageItem('personalTokenInfo',false);
+						clicked("login.html");
+					}
+					
+				});
+				//收银授权 
+				//收银查询				
+				homePageObj.on('touchend', '.toInvoiceList', function(){
+					if(timeInterval()<0){
+						if(authDataInfo==null){
+							plus.nativeUI.toast("请先获取开票授权",{
+								"verticalAlign":"center"
+							})
+							return false
+						}else{
+							if(authDataInfo.phone!=admin.mobile){
+								plus.nativeUI.toast("授权信息不匹配,需重新获取授权",{
+								"verticalAlign":"center"
+								})
+								return false
+							}else{
+								if(authDataInfo.isPay=="1"){
+									clicked('pay/pay_search.html',false,false);
+								}else{
+									plus.nativeUI.toast("未开通收银功能",{
+									"verticalAlign":"center"
+									})
+									return false
+								}
+								
+							}
+							
+						}
+						
+					}else{
+						plus.nativeUI.toast('登录失效，请重新登陆', {
+									'verticalAlign':'center'
+						});
+						pwyUtil.setStorageItem('personalTokenInfo',false);
+						clicked("login.html");
+					}
+					
+				});
+				//扫描收银
+				homePageObj.on('touchend', '.toBx', function(){
+					if(timeInterval()<0){
+						if(authDataInfo==null){
+							plus.nativeUI.toast("请先获取开票授权",{
+								"verticalAlign":"center"
+							})
+							return false
+						}else{
+							if(authDataInfo.phone!=admin.mobile){
+								plus.nativeUI.toast("授权信息不匹配,需重新获取授权",{
+								"verticalAlign":"center"
+								})
+								return false
+							}else{
+								if(authDataInfo.isPay=="1"){
+									clicked('pay/scanPay.html');
+								}else{
+									plus.nativeUI.toast("未开通收银功能",{
+									"verticalAlign":"center"
+									})
+									return false
+								}
+							}
+							
+						}												
+					}else{
+						plus.nativeUI.toast('登录失效，请重新登陆', {
+									'verticalAlign':'center'
+						});
+						pwyUtil.setStorageItem('personalTokenInfo',false);
+						clicked("login.html");
+					}
+					
+				});
+				homePageObj.on('touchend', '.toSet', function(){			
+					if(timeInterval()<0){
+						clicked('plus/my_info.html',false,false);
+					}else{
+						clicked("login.html");
+					}
+					
+				});
+				
+				homePageObj.on('touchend', '.toBxList', function(){			
+					if(timeInterval()<0){
+						plus.nativeUI.toast("暂未开放该功能",{
+									"verticalAlign":"center"
+						})
+					}else{
+						clicked("login.html");
+					}
+					
+				});
+				
+				
+			    var timeInterval=function(){
+			    	var time=new Date().getTime();
+			    	var loginTime=pwyUtil.getStorageItem('loginTime');			    	
+			    	var errortime=time-loginTime;	
+			    	var Invalid=24*1*60*60*1000;
+			    	//var Invalid=600000;
+		    		var Interval=errortime-Invalid;			    				    	
+			    	return Interval
+			    }
+			})						
+		});	
+    </script>
+</head>
+<body class="homePage" id="homePage">
+	<div class="tobButtons clf">
+		<a class="toReceiveInvoice" href="javascript:;">扫码开票</a>
+		<a class="toBx" href="javascript:;">扫码收银</a>
+	</div>	
+	<div class="bodyButtons">
+		<div class="cut"></div>	
+		<div class="row clf">			
+			<a class="toBxList wait" href="javascript:;">开票查询</a>
+			<a class="toBxApprove" href="javascript:;">录入开票</a>
+			<a class="toAddInvoice" href="javascript:;">用户授权</a>
+		</div>
+		<div class="row clf">
+			<a class="toInvoiceList" href="javascript:;">收银查询</a>
+			<a class="toXiaolist wait" href="javascript:;" style="display: none;">获取收银授权</a>
+			<a class="toSet" href="javascript:;">设置</a>
+		</div>
+	</div>
+	<div class="footer"><span>版本号：</span>V2.2.2</div>
+</body>
+</html>
